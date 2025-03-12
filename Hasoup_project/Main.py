@@ -130,16 +130,17 @@ def add_students():
         else:            
             lessons_number = is_it_int("How many lessons does the student have?", "please enter digits only")
             for j in range(lessons_number):
-                lesson_name = input(f"Enter the name for lesson# {j+1}\n")
-                existing_lesson = Lesson.get_lesson_by_name(lesson_name)
+                show_lessons()
+                lesson_id = is_it_int(f"Enter the id for lesson# {j+1}", "please enter only digits for lesson id")
+                existing_lesson = Lesson.get_lesson_by_id(lesson_id)
 
                 if existing_lesson:
-                    print(f"we will add student {student_id} to the existing Lesson '{lesson_name}' with ID {existing_lesson.lesson_id}")
+                    print(f"we will add student {student_id} to the existing Lesson '{existing_lesson.lesson_name}' with ID {existing_lesson.lesson_id}")
                     lesson_id = existing_lesson.lesson_id
                 else:
-                    print(f"Creating new lesson: '{lesson_name}'")
-                    lesson_id = no_id_redundancy(f"Enter the id for '{lesson_name}'", "please enter only digits for lesson id", "L")
-                    lessons_to_add[lesson_id] = Lesson(lesson_id, lesson_name)
+                    print(f"Creating new lesson: '{existing_lesson.lesson_name}'")
+                    lesson_id = no_id_redundancy(f"Enter the id for '{existing_lesson.lesson_name}'", "please enter only digits for lesson id", "L")
+                    lessons_to_add[lesson_id] = Lesson(lesson_id, existing_lesson.lesson_name)
                 st_les.append((lesson_id, student_id))
 
 def remove_students():
@@ -213,6 +214,7 @@ def remove_lessons():
 def update_lessons():
     num_of_lessons = is_it_int("How many lessons do you want to update", "please enter only digits")
     for i in range(num_of_lessons):
+        show_lessons()
         while True:
             lesson_id = is_it_int(f"Enter the id for lesson#{i+1}.", "please enter only digits for lesson id")
             lesson = Lesson.get_lesson_by_id(lesson_id)
@@ -263,10 +265,11 @@ def show_lessons():
         print(f"Database error: {e}")
 
 while True :
+
     print("----What Do You Want To Do----") 
     print("""Add student (A)
 Delete student (D)
-Change student info (U)
+Update student info (U)
 Show student info (S)
 Add lesson (AL)
 Delete lesson (DL)
@@ -339,3 +342,5 @@ Quit (Q)""")
         break
     else :
         print("please enter only one of [A, D, U, S, AL, DL, US, SL, Q]")
+
+        
